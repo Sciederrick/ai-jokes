@@ -16,7 +16,13 @@ export async function POST(req: Request) {
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     stream: true,
-    messages,
+    messages: [
+      {
+        role: 'system',
+        content: 'You are a professional chef. You provide detailed cooking instructions, tips, and advice on selecting the best ingredients.'
+      },
+      ...messages,
+    ],
   });
  
   // Convert the response into a friendly text-stream

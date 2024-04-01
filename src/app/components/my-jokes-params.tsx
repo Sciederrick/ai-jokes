@@ -25,7 +25,7 @@ const MyJokesParams = () => {
               <h3 className="underline">Topic</h3>
                 <ul className="min-w-[200px] grid grid-cols-1 gap-4" id="topic">
                     {topics.map((topic, index) => (
-                        <li className="border rounded-xl py-2 border-transparent hover:border-green-400" key={index} value={topic.toLowerCase()}>{topic}</li>
+                        <li className="params-select" key={index} value={topic.toLowerCase()}>{topic}</li>
                     ))}
                 </ul>
             </div>
@@ -33,7 +33,7 @@ const MyJokesParams = () => {
               <h3 className="underline">Type</h3>
               <ul className="min-w-[200px]" id="type">
                 {jokeTypes.map((jokeType, index) => (
-                    <li className="border rounded-xl py-2 border-transparent hover:border-green-400" key={index} value={jokeType.toLowerCase()}>{jokeType}</li>
+                    <li className="params-select" key={index} value={jokeType.toLowerCase()}>{jokeType}</li>
                 ))}
               </ul>
             </div>
@@ -41,7 +41,7 @@ const MyJokesParams = () => {
               <h3 className="underline">Tone</h3>
               <ul className="min-w-[200px]" id="tone">
                 {tones.map((tone, index) => (
-                    <li className="border rounded-xl py-2 border-transparent hover:border-green-400" key={index} value={tone.toLowerCase()}>{tone}</li>
+                    <li className="params-select" key={index} value={tone.toLowerCase()}>{tone}</li>
                 ))}
               </ul>
             </div>
