@@ -1,4 +1,7 @@
 # Jokes Generator
+
+![app screenshot](./screenshot.png)
+
 ## Getting Started
 
 First, run the development server:
