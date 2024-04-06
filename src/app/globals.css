@@ -54,7 +54,10 @@ body {
 }
 
 @layer components {
+  .params-container {
+    @apply min-w-[200px] grid grid-cols-1 gap-4 px-4;
+  }
   .params-select {
-    @apply border rounded-xl py-2 border-transparent hover:border-green-400;
+    @apply border rounded-xl py-2 px-3 border-gray-500 hover:border-green-400 cursor-pointer;
   }
 }
