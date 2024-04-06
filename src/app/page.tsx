@@ -8,7 +8,10 @@ export default function Chat() {
     messages,
     isLoading,
     append,
-  } = useChat();
+  } = useChat({ api: 'api/jokes/generator', onFinish(message) {
+    console.log(message.content)
+    rateTheJoke(message.content);
+  } } );
 
   const [topics] = useState(['work', 'people', 'food', 'television', 'satirical-humor']);
   const [jokeTypes] = useState(['puns', 'one-liner', 'observational-humor'])
@@ -18,6 +21,7 @@ export default function Chat() {
   const [topic, setTopic] = useState(topics[0]);
   const [jokeType, setJokeType] = useState(jokeTypes[0]);
   const [tone, setTone] = useState(tones[0]);
+  const [jokeAnalysis, setJokeAnalysis] = useState<string|null>(null);
 
   const handleTemperatureChange = (e:any) => {
       setTemp(e.target.value);
@@ -36,17 +40,37 @@ export default function Chat() {
   };
 
   const handleClickSubmit = () => {
+    setJokeAnalysis(null);
     append({ role: "user", content: `Generate a ${tone} ${jokeType} joke based on ${topic}` }, { options: { body: {temperature: temp}}})
   }
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const rateTheJoke = async (joke: string) => {
+    console.log(`joke: ${joke}`)
+    const response = await fetch("api/jokes/rating", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages: [{
+          role: 'user',
+          content: joke
+        }]
+      }),
+    });
+    const data = await response.json();
+    const rateJoke = data.choices[0].message.content;
+    setJokeAnalysis(rateJoke)
+  }
 
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  let [prevNumMsgs, setPrevNumMsgs]  = useState(messages.length);
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, jokeAnalysis]);
 
   return (
     <div className="flex flex-col w-full h-screen max-w-[768px] py-12 mx-auto stretch">
@@ -55,7 +79,7 @@ export default function Chat() {
           <div className="space-y-4">
             <h1 className="text-4xl font-bold">Generate Jokes</h1>
             <p className="text-gray-500 dark:text-gray-400">
-              choose the topic, type, tone, and temperature to generate jokes using the Shadcn Joke API.
+              Choose the topic, type, tone, and temperature to generate jokes with AI.
             </p>
           </div>
           <div className="flex flex-col gap-4 min-h-[400px] justify-center pt-8">
@@ -122,8 +146,13 @@ export default function Chat() {
             <span className="animate-bounce">...</span>
           </div>
         )}
+        {jokeAnalysis && (
+          <div className="p-4 bg-yellow-900 m-2 rounded">
+            {jokeAnalysis}
+          </div>
+        )}
       </div>
-      <div className="fixed bottom-0 w-full max-w-[768px]">
+      <div className="fixed bottom-4 w-full max-w-[768px]">
         <div className="flex flex-col justify-center mb-2 items-center">
           <button
             className="bg-blue-500 p-2 text-white rounded shadow-xl"
